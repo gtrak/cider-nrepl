@@ -2,6 +2,7 @@
   (:require [clojure.string :as s]
             [clojure.tools.nrepl.transport :as transport]
             [clojure.tools.nrepl.middleware :refer [set-descriptor!]]
+            [clojure.tools.nrepl.middleware.pr-values :refer [pr-values]]
             [clojure.tools.nrepl.misc :refer [response-for]]
             [cider.nrepl.middleware.util.cljs :as cljs]
             [cider.nrepl.middleware.util.misc :as u]
@@ -19,6 +20,7 @@
 (defn complete-reply
   [{:keys [transport] :as msg}]
   (let [results (complete msg)]
+    (throw (Exception. "TEST"))
     (transport/send transport (response-for msg :value results))
     (transport/send transport (response-for msg :status :done))))
 
@@ -33,7 +35,8 @@
 (set-descriptor!
  #'wrap-complete
  (cljs/maybe-piggieback
-  {:handles
+  {:expects #{#'pr-values}
+   :handles
    {"complete"
     {:doc "Return a list of symbols matching the specified (partial) symbol."
      :requires {"symbol" "The symbol to lookup"

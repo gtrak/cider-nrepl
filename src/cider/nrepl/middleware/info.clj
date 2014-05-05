@@ -4,6 +4,7 @@
             [cider.nrepl.middleware.util.cljs :as cljs]
             [cider.nrepl.middleware.util.java :as java]
             [cider.nrepl.middleware.util.misc :as u]
+            [clojure.tools.nrepl.middleware.pr-values :refer [pr-values]]
             [clojure.repl]
             [cljs-tooling.info :as cljs-info]
             [clojure.tools.nrepl.transport :as transport]
@@ -158,7 +159,8 @@
 (set-descriptor!
  #'wrap-info
  (cljs/maybe-piggieback
-  {:handles
+  {:expects #{#'pr-values}
+   :handles
    {"info"
     {:doc "Return a map of information about the specified symbol."
      :requires {"symbol" "The symbol to lookup"

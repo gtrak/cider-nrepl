@@ -2,6 +2,7 @@
   (:require [clojure.java.classpath :as cp]
             [clojure.tools.nrepl.transport :as transport]
             [clojure.tools.nrepl.middleware :refer [set-descriptor!]]
+            [clojure.tools.nrepl.middleware.pr-values :refer [pr-values]]
             [clojure.tools.nrepl.misc :refer [response-for]]))
 
 (defn classpath []
@@ -22,7 +23,8 @@
 
 (set-descriptor!
   #'wrap-classpath
-  {:handles
+  {:expects #{#'pr-values}
+   :handles
    {"classpath"
     {:doc "Return a list of entries in the java classpath"
      :returns {"status" "done"}}}})

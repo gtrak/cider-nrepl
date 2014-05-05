@@ -4,6 +4,7 @@
             [clojure.java.classpath :as cp]
             [clojure.tools.nrepl.transport :as transport]
             [clojure.tools.nrepl.middleware.session :refer [session]]
+            [clojure.tools.nrepl.middleware.pr-values :refer [pr-values]]
             [clojure.tools.nrepl.middleware :refer [set-descriptor!]]
             [clojure.tools.nrepl.misc :refer [response-for]]))
 
@@ -40,7 +41,7 @@
           val ;; otherwise, show var value
           )))
 
-(defn inspector-op [inspector {:keys [session op ns sym idx] :as msg}]
+(defn inspector-op [inspector {:keys [op ns sym idx] :as msg}]
   (try
     (cond
      ;; new
@@ -59,7 +60,7 @@
 
 (def ^:private current-inspector (atom nil))
 
-(defn session-inspector-value [{:keys [session] :as msg}]
+(defn session-inspector-value [{:keys [] :as msg}]
   (let [inspector (or @current-inspector (inspect/fresh))
         result (inspector-op inspector msg)]
     (cond
@@ -76,14 +77,14 @@
       (transport/send transport (response-for msg {:status :done} result))
       (handler msg))))
 
-(set-descriptor! #'wrap-inspect
-  {:requires #{#'session}
-   :handles {"inspect-reset" {}
-             "inspect-refresh" {}
-             "inspect-push" {}
-             "inspect-pop" {}
-             "inspect-start" {}}})
-
+(set-descriptor!
+ #'wrap-inspect
+ {:expects #{#'pr-values}
+  :handles {"inspect-reset" {}
+            "inspect-refresh" {}
+            "inspect-push" {}
+            "inspect-pop" {}
+            "inspect-start" {}}})
 
 ;; Preliminary support for loading of extension namespaces
 

@@ -21,12 +21,7 @@
   :profiles {:1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}
-             :dev {:repl-options {:nrepl-middleware [cider.nrepl.middleware.classpath/wrap-classpath
-                                                     cider.nrepl.middleware.complete/wrap-complete
-                                                     cider.nrepl.middleware.info/wrap-info
-                                                     cider.nrepl.middleware.inspect/wrap-inspect
-                                                     cider.nrepl.middleware.stacktrace/wrap-stacktrace
-                                                     cider.nrepl.middleware.trace/wrap-trace
+             :dev {:repl-options {:nrepl-middleware [cider.nrepl.middleware.default/wrap-default
                                                      ]}
 
                    ;; The "sources" jar should be the same version as Clojure,
